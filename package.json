@@ -1,18 +1,20 @@
 {
   "name": "lint-world",
   "version": "1.0.0",
-  "description": "",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": "dist/cli.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "files": [
+    "dist",
+    "package.json",
+    "!dist/__tests__"
+  ],
   "scripts": {
     "build": "tsc",
     "lint": "tsx src/cli.ts",
     "lint:fix": "pnpm lint --fix",
+    "test": "vitest run",
     "prepare": "husky install"
   },
   "dependencies": {

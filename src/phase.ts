@@ -1,10 +1,9 @@
-export type DefaultArgKey = 'fix' | 'parallel';
+import type { MaybePromise } from './internal/types.js';
 
-type ArgMap<Key extends string = never> = {
-  [K in DefaultArgKey | Key]: boolean;
-};
+type DefaultArgKey = 'fix' | 'parallel';
+type ArgMap<Key extends string = never> = Record<DefaultArgKey | Key, boolean>;
 
-export type LintPhaseExecution<Args> = (args: Args) => Promise<void>;
+export type LintPhaseExecution<Args> = (args: Args) => MaybePromise<void>;
 
 export type CliArgumentDescriptor = {
   default: boolean;

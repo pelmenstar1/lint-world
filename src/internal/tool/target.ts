@@ -7,7 +7,7 @@ export function resolveToolTarget(
   target: MaybeArray<string> | undefined,
 ): UnresolvedCommandAtom {
   if (target === undefined) {
-    return ['.'];
+    return '.';
   }
 
   return normalizeMaybeArray(target).map((t) => `"${t}"`);

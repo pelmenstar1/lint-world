@@ -4,7 +4,7 @@ import type { Falsy } from './internal/types.js';
 export type ResolvedCommand = string[];
 
 export type UnresolvedCommandAtom = MaybeArray<string | Falsy>;
-export type UnresolvedCommandAtomFn<Args> =
+type UnresolvedCommandAtomFn<Args> =
   UnresolvedCommandAtom | ((args: Args) => MaybeArray<UnresolvedCommandAtom>);
 
 export type UnresolvedCommand<Args> = MaybeArray<UnresolvedCommandAtomFn<Args>>;

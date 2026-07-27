@@ -10,11 +10,9 @@ export type CacheOption =
 export function resolveCacheOption(
   cache: CacheOption | undefined,
 ): UnresolvedCommandAtom {
-  if (typeof cache === 'boolean') {
-    return cache ? '--cache' : [];
-  }
-
-  if (typeof cache === 'object') {
+  if (cache === true) {
+    return '--cache';
+  } else if (typeof cache === 'object') {
     return [
       '--cache',
       cache.cacheLocation && `--cache-location="${cache.cacheLocation}"`,

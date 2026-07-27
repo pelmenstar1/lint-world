@@ -1,4 +1,4 @@
-import { eslint, prettier, defineConfig, tsc } from './src';
+import { eslint, prettier, defineConfig, tsc, knip } from './src';
 
 export default defineConfig({
   phases: [
@@ -7,5 +7,6 @@ export default defineConfig({
       cache: true,
     }),
     tsc(),
+    knip(),
   ],
 });

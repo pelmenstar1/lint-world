@@ -4,12 +4,12 @@ import {
   type CacheOption,
 } from '../internal/tool/cache.js';
 import type { MaybeArray } from '../internal/maybeArray.js';
-import { resolveToolTarget } from '../internal/tool/target.js';
+import { resolveToolTarget, type ToolTarget } from '../internal/tool/target.js';
 import { defineLintPhase } from '../phase.js';
 import type { DefaultToolOptions } from '../internal/tool/types.js';
 
 export interface PrettierOptions extends DefaultToolOptions {
-  target?: MaybeArray<string>;
+  target?: ToolTarget;
   cache?: CacheOption;
   cliOptions?: MaybeArray<string>;
 }
