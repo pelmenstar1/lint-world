@@ -6,7 +6,14 @@ type ArgMap<Key extends string = never> = Record<DefaultArgKey | Key, boolean>;
 /**
  * Provides a way to execute a tool using provided {@link Args | arguments}
  */
-export type LintToolExecution<Args> = (args: Args) => MaybePromise<void>;
+export type LintToolExecution<Args> = {
+  (args: Args): MaybePromise<void>;
+
+  /**
+   * Describes what the execution of the tool does. It's used for `dry-run mode` to inform the user about what would happen if the tool was executed.
+   */
+  describe?: (args: Args) => string;
+};
 
 /**
  * Describes a command line argument for a tool. It can only be a boolean flag.

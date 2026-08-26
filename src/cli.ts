@@ -3,6 +3,13 @@ import chalk from 'chalk';
 import type { BaseLintTool, CliArgumentMap } from './tool.js';
 import minimist from 'minimist';
 
+type CliArgs = {
+  fix: boolean;
+  parallel: boolean;
+  'dry-run': boolean;
+  [key: string]: boolean;
+};
+
 type ExecutionStrategy = <Args>(
   tools: readonly BaseLintTool<Args>[],
   args: Args,
@@ -75,6 +82,7 @@ function getMinimistOptions(config: LintWorldConfig): minimist.Opts {
   const defaultValues: Record<string, boolean> = {
     fix: false,
     parallel: true,
+    'dry-run': false,
   };
 
   for (const key in cli) {
@@ -86,9 +94,47 @@ function getMinimistOptions(config: LintWorldConfig): minimist.Opts {
   }
 
   return {
-    boolean: ['fix', 'parallel', ...Object.keys(cli)],
+    boolean: ['fix', 'parallel', 'dry-run', ...Object.keys(cli)],
     default: defaultValues,
   };
+}
+
+async function runTools(config: LintWorldConfig, args: CliArgs) {
+  const runInParallel = args.parallel && !args.fix;
+  const strategy = runInParallel ? parallelExecution : sequentialExecution;
+
+  const success = await strategy(config.tools, args);
+
+  if (!success) {
+    process.exit(1);
+  }
+}
+
+function dryRunTools(config: LintWorldConfig, args: CliArgs) {
+  const rows: { name: string; description: string }[] = [];
+  let maxNameLength = 0;
+
+  for (const tool of config.tools) {
+    if (shouldRunTool(tool, args)) {
+      const { name, execute } = tool;
+      const description = execute.describe?.(args);
+
+      if (description !== undefined) {
+        rows.push({ name, description });
+
+        maxNameLength = Math.max(maxNameLength, name.length);
+      }
+    }
+  }
+
+  console.log(
+    rows
+      .map(
+        ({ name, description }) =>
+          `${chalk.bold(name.padEnd(maxNameLength))} │ ${description}`,
+      )
+      .join('\n'),
+  );
 }
 
 async function main() {
@@ -98,19 +144,12 @@ async function main() {
     getMinimistOptions(config),
   );
 
-  const args = parsedArgs as unknown as {
-    fix: boolean;
-    parallel: boolean;
-    [key: string]: boolean;
-  };
+  const args = parsedArgs as unknown as CliArgs;
 
-  const runInParallel = args.parallel && !args.fix;
-  const strategy = runInParallel ? parallelExecution : sequentialExecution;
-
-  const success = await strategy(config.tools, args);
-
-  if (!success) {
-    process.exit(1);
+  if (args['dry-run']) {
+    dryRunTools(config, args);
+  } else {
+    await runTools(config, args);
   }
 }
 

@@ -8,7 +8,7 @@ import type { LintToolExecution } from '../tool.js';
 export function npmExec<Args>(
   command: UnresolvedCommand<Args>,
 ): LintToolExecution<Args> {
-  return async (args) => {
+  const result: LintToolExecution<Args> = async (args) => {
     const resolvedCommand = resolveCommand(command, args);
     const [executable, ...commandArgs] = resolvedCommand;
     if (!executable) {
@@ -19,4 +19,8 @@ export function npmExec<Args>(
       preferLocal: true,
     });
   };
+
+  result.describe = (args) => resolveCommand(command, args).join(' ');
+
+  return result;
 }
