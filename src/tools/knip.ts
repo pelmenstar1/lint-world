@@ -1,5 +1,4 @@
 import { npmExec } from '../exec/npm.js';
-import type { MaybeArray } from '../internal/maybeArray.js';
 import type { DefaultToolOptions } from '../internal/tool/types.js';
 import { defineLintTool } from '../tool.js';
 
@@ -8,7 +7,6 @@ type CacheOption = boolean | { cacheLocation: string };
 export interface KnipToolOptions extends DefaultToolOptions {
   cache?: CacheOption;
   cycles?: boolean;
-  cliOptions?: MaybeArray<string>;
 }
 
 function resolveCacheOption(cache: CacheOption | undefined) {
