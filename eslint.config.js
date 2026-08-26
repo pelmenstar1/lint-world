@@ -13,6 +13,7 @@ export default defineConfig([
       'prettier.config.js',
       'knip.config.ts',
       'lint-world.config.ts',
+      'vitest.config.ts',
       'src/**/*.*js',
     ],
   },

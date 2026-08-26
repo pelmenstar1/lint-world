@@ -1,10 +1,26 @@
 {
   "name": "lint-world",
   "version": "1.0.0",
+  "description": "Run every linter in your project with one command",
+  "license": "MIT",
+  "author": "Oleh Khmaruk <pelmenstar1@gmail.com>",
+  "keywords": [
+    "lint",
+    "linter",
+    "eslint",
+    "prettier",
+    "stylelint",
+    "knip",
+    "tsc"
+  ],
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": "dist/cli.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pelmenstar1/lint-world.git"
+  },
   "files": [
     "dist",
     "package.json",
@@ -15,10 +31,9 @@
     "lint": "tsx src/cli.ts",
     "lint:fix": "pnpm lint --fix",
     "test": "vitest run",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "dependencies": {
-    "@types/minimist": "^1.2.5",
     "chalk": "^5.6.2",
     "execa": "^10.0.0",
     "jiti": "^2.7.0",
@@ -27,6 +42,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^26.1.1",
+    "@types/minimist": "^1.2.5",
     "eslint": "^10.8.0",
     "husky": "^9.1.7",
     "knip": "^6.29.0",
