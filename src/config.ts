@@ -1,6 +1,7 @@
 import path from 'node:path';
 import type { AnyLintTool } from './tool.js';
 import { createJiti } from 'jiti';
+import { LintWorldError } from './internal/error.js';
 
 /**
  * The configuration for lint-world.
@@ -58,7 +59,7 @@ export async function loadConfig(
     }
   }
 
-  throw new Error(
+  throw new LintWorldError(
     `Configuration for lint-world is required. Tried: ${EXTENSIONS.map(getConfigName).join(', ')}`,
   );
 }

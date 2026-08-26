@@ -17,7 +17,7 @@ function resolveCacheOption(cache: CacheOption | undefined) {
   } else if (typeof cache === 'object') {
     return [
       '--cache',
-      cache.cacheLocation && `--cache-location="${cache.cacheLocation}"`,
+      cache.cacheLocation && `--cache-location=${cache.cacheLocation}`,
     ];
   }
 

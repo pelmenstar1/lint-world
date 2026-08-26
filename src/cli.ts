@@ -1,7 +1,9 @@
+#!/usr/bin/env node
 import { loadConfig, type LintWorldConfig } from './config.js';
 import chalk from 'chalk';
 import type { BaseLintTool, CliArgumentMap } from './tool.js';
 import minimist from 'minimist';
+import { LintWorldError } from './internal/error.js';
 
 type CliArgs = {
   fix: boolean;
@@ -14,6 +16,15 @@ type ExecutionStrategy = <Args>(
   tools: readonly BaseLintTool<Args>[],
   args: Args,
 ) => Promise<boolean>;
+
+/**
+ * Arguments owned by lint-world itself. A tool cannot redefine them.
+ */
+const RESERVED_ARGUMENTS: Record<string, boolean> = {
+  fix: false,
+  parallel: true,
+  'dry-run': false,
+};
 
 function printStatus(
   action: string,
@@ -52,7 +63,9 @@ const sequentialExecution: ExecutionStrategy = async (tools, args) => {
 
   for (const tool of tools) {
     if (shouldRunTool(tool, args)) {
-      allSuccess &&= await runTool(tool, args);
+      const success = await runTool(tool, args);
+
+      allSuccess = allSuccess && success;
     }
   }
 
@@ -79,22 +92,30 @@ function getMinimistOptions(config: LintWorldConfig): minimist.Opts {
     ...config.tools.map((tool) => tool.cli),
   ) as CliArgumentMap<string>;
 
-  const defaultValues: Record<string, boolean> = {
-    fix: false,
-    parallel: true,
-    'dry-run': false,
-  };
+  const defaultValues: Record<string, boolean> = { ...RESERVED_ARGUMENTS };
 
   for (const key in cli) {
     const descriptor = cli[key];
 
-    if (descriptor) {
-      defaultValues[key] = descriptor.default;
+    if (!descriptor) {
+      continue;
     }
+
+    if (Object.hasOwn(RESERVED_ARGUMENTS, key)) {
+      console.warn(
+        chalk.yellow(
+          `Ignoring the tool-defined '${key}' argument: it is reserved by lint-world.`,
+        ),
+      );
+
+      continue;
+    }
+
+    defaultValues[key] = descriptor.default;
   }
 
   return {
-    boolean: ['fix', 'parallel', 'dry-run', ...Object.keys(cli)],
+    boolean: Object.keys(defaultValues),
     default: defaultValues,
   };
 }
@@ -153,4 +174,12 @@ async function main() {
   }
 }
 
-void main();
+main().catch((error: unknown) => {
+  if (error instanceof LintWorldError) {
+    console.error(chalk.red(error.message));
+  } else {
+    console.error(error);
+  }
+
+  process.exit(1);
+});

@@ -15,8 +15,8 @@ export function resolveCacheOption(
   } else if (typeof cache === 'object') {
     return [
       '--cache',
-      cache.cacheLocation && `--cache-location="${cache.cacheLocation}"`,
-      cache.cacheStrategy && `--cache-strategy="${cache.cacheStrategy}"`,
+      cache.cacheLocation && `--cache-location=${cache.cacheLocation}`,
+      cache.cacheStrategy && `--cache-strategy=${cache.cacheStrategy}`,
     ];
   }
 

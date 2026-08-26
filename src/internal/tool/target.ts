@@ -10,5 +10,5 @@ export function resolveToolTarget(
     return '.';
   }
 
-  return normalizeMaybeArray(target).map((t) => `"${t}"`);
+  return normalizeMaybeArray(target);
 }
