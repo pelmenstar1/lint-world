@@ -1,3 +1,3 @@
 export default {
-  phases: [{ name: 'ts-phase', execute: () => {} }],
+  tools: [{ name: 'ts-tool', execute: () => {} }],
 };

@@ -1,7 +1,7 @@
 import { npmExec } from '../exec/npm.js';
 import type { MaybeArray } from '../internal/maybeArray.js';
 import type { DefaultToolOptions } from '../internal/tool/types.js';
-import { defineLintPhase } from '../phase.js';
+import { defineLintTool } from '../tool.js';
 
 type CacheOption = boolean | { cacheLocation: string };
 
@@ -25,7 +25,7 @@ function resolveCacheOption(cache: CacheOption | undefined) {
 }
 
 export function knip(options?: KnipToolOptions) {
-  return defineLintPhase({
+  return defineLintTool({
     name: 'knip',
     cli: {
       knip: { default: options?.executeByDefault ?? true },

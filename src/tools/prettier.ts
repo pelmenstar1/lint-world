@@ -5,17 +5,17 @@ import {
 } from '../internal/tool/cache.js';
 import type { MaybeArray } from '../internal/maybeArray.js';
 import { resolveToolTarget, type ToolTarget } from '../internal/tool/target.js';
-import { defineLintPhase } from '../phase.js';
+import { defineLintTool } from '../tool.js';
 import type { DefaultToolOptions } from '../internal/tool/types.js';
 
-export interface PrettierOptions extends DefaultToolOptions {
+export interface PrettierToolOptions extends DefaultToolOptions {
   target?: ToolTarget;
   cache?: CacheOption;
   cliOptions?: MaybeArray<string>;
 }
 
-export function prettier(options?: PrettierOptions) {
-  return defineLintPhase({
+export function prettier(options?: PrettierToolOptions) {
+  return defineLintTool({
     name: 'prettier',
     cli: {
       prettier: { default: options?.executeByDefault ?? true },

@@ -10,21 +10,21 @@ function fixture(name: string): string {
 
 describe('loadConfig', () => {
   it.each([
-    { ext: 'ts', dir: 'ts-config', phaseName: 'ts-phase' },
-    { ext: 'js', dir: 'js-config', phaseName: 'js-phase' },
-    { ext: 'mjs', dir: 'mjs-config', phaseName: 'mjs-phase' },
-    { ext: 'cjs', dir: 'cjs-config', phaseName: 'cjs-phase' },
-  ])('loads a .$ext config file', async ({ dir, phaseName }) => {
+    { ext: 'ts', dir: 'ts-config', toolName: 'ts-tool' },
+    { ext: 'js', dir: 'js-config', toolName: 'js-tool' },
+    { ext: 'mjs', dir: 'mjs-config', toolName: 'mjs-tool' },
+    { ext: 'cjs', dir: 'cjs-config', toolName: 'cjs-tool' },
+  ])('loads a .$ext config file', async ({ dir, toolName }) => {
     const config = await loadConfig(fixture(dir));
 
-    expect(config.phases).toHaveLength(1);
-    expect(config.phases[0]?.name).toBe(phaseName);
+    expect(config.tools).toHaveLength(1);
+    expect(config.tools[0]?.name).toBe(toolName);
   });
 
   it('prefers .js over .ts when both are present', async () => {
     const config = await loadConfig(fixture('priority-config'));
 
-    expect(config.phases[0]?.name).toBe('priority-js-phase');
+    expect(config.tools[0]?.name).toBe('priority-js-tool');
   });
 
   it('throws when no config file is found', async () => {

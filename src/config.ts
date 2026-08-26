@@ -1,10 +1,10 @@
 import path from 'node:path';
-import type { AnyLintPhase } from './phase.js';
+import type { AnyLintTool } from './tool.js';
 import { createJiti } from 'jiti';
 import { importOneOf } from './internal/jiti.js';
 
 export type LintWorldConfig = {
-  phases: AnyLintPhase[];
+  tools: AnyLintTool[];
 };
 
 const CONFIG_PREFIX = 'lint-world.config';

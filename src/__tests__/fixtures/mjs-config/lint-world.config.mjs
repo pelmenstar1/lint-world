@@ -1,3 +1,3 @@
 export default {
-  phases: [{ name: 'mjs-phase', execute: () => {} }],
+  tools: [{ name: 'mjs-tool', execute: () => {} }],
 };

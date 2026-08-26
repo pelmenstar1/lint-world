@@ -1,3 +1,3 @@
 export default {
-  phases: [{ name: 'priority-ts-phase', execute: () => {} }],
+  tools: [{ name: 'priority-ts-tool', execute: () => {} }],
 };

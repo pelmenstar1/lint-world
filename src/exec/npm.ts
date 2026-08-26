@@ -1,10 +1,10 @@
 import { resolveCommand, type UnresolvedCommand } from '../command.js';
 import { execa } from 'execa';
-import type { LintPhaseExecution } from '../phase.js';
+import type { LintToolExecution } from '../tool.js';
 
 export function npmExec<Args>(
   command: UnresolvedCommand<Args>,
-): LintPhaseExecution<Args> {
+): LintToolExecution<Args> {
   return async (args) => {
     const resolvedCommand = resolveCommand(command, args);
     const [executable, ...commandArgs] = resolvedCommand;

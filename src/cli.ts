@@ -1,26 +1,26 @@
 import { loadConfig, type LintWorldConfig } from './config.js';
 import chalk from 'chalk';
-import type { BaseLintPhase, CliArgumentMap } from './phase.js';
+import type { BaseLintTool, CliArgumentMap } from './tool.js';
 import minimist from 'minimist';
 
 type ExecutionStrategy = <Args>(
-  phases: readonly BaseLintPhase<Args>[],
+  tools: readonly BaseLintTool<Args>[],
   args: Args,
 ) => Promise<boolean>;
 
 function printStatus(
   action: string,
-  phaseName: string,
+  toolName: string,
   format: (value: string) => string,
 ): void {
-  console.log(format(`> ${chalk.bold(phaseName)} ${action}`));
+  console.log(format(`> ${chalk.bold(toolName)} ${action}`));
 }
 
-async function runPhase<Args>(
-  phase: BaseLintPhase<Args>,
+async function runTool<Args>(
+  tool: BaseLintTool<Args>,
   args: Args,
 ): Promise<boolean> {
-  const { name, execute } = phase;
+  const { name, execute } = tool;
 
   try {
     printStatus('running', name, chalk.gray);
@@ -36,27 +36,27 @@ async function runPhase<Args>(
   }
 }
 
-function shouldRunPhase<Args>(phase: BaseLintPhase<Args>, args: Args): boolean {
-  return phase.when?.(args) ?? true;
+function shouldRunTool<Args>(tool: BaseLintTool<Args>, args: Args): boolean {
+  return tool.when?.(args) ?? true;
 }
 
-const sequentialExecution: ExecutionStrategy = async (phases, args) => {
+const sequentialExecution: ExecutionStrategy = async (tools, args) => {
   let allSuccess = true;
 
-  for (const phase of phases) {
-    if (shouldRunPhase(phase, args)) {
-      allSuccess &&= await runPhase(phase, args);
+  for (const tool of tools) {
+    if (shouldRunTool(tool, args)) {
+      allSuccess &&= await runTool(tool, args);
     }
   }
 
   return allSuccess;
 };
 
-const parallelExecution: ExecutionStrategy = async (phases, args) => {
+const parallelExecution: ExecutionStrategy = async (tools, args) => {
   const results = await Promise.all(
-    phases.map(async (phase) => {
-      if (shouldRunPhase(phase, args)) {
-        return runPhase(phase, args);
+    tools.map(async (tool) => {
+      if (shouldRunTool(tool, args)) {
+        return runTool(tool, args);
       }
 
       return true;
@@ -69,7 +69,7 @@ const parallelExecution: ExecutionStrategy = async (phases, args) => {
 function getMinimistOptions(config: LintWorldConfig): minimist.Opts {
   const cli = Object.assign(
     {},
-    ...config.phases.map((phase) => phase.cli),
+    ...config.tools.map((tool) => tool.cli),
   ) as CliArgumentMap<string>;
 
   const defaultValues: Record<string, boolean> = {
@@ -107,7 +107,7 @@ async function main() {
   const runInParallel = args.parallel && !args.fix;
   const strategy = runInParallel ? parallelExecution : sequentialExecution;
 
-  const success = await strategy(config.phases, args);
+  const success = await strategy(config.tools, args);
 
   if (!success) {
     process.exit(1);

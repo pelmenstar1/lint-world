@@ -1,14 +1,14 @@
 import { npmExec } from '../exec/npm.js';
 import type { MaybeArray } from '../internal/maybeArray.js';
 import type { DefaultToolOptions } from '../internal/tool/types.js';
-import { defineLintPhase } from '../phase.js';
+import { defineLintTool } from '../tool.js';
 
-export interface TscPhaseOptions extends DefaultToolOptions {
+export interface TscToolOptions extends DefaultToolOptions {
   cliOptions?: MaybeArray<string>;
 }
 
-export function tsc(options?: TscPhaseOptions) {
-  return defineLintPhase({
+export function tsc(options?: TscToolOptions) {
+  return defineLintTool({
     name: 'tsc',
     cli: {
       tsc: { default: options?.executeByDefault ?? true },

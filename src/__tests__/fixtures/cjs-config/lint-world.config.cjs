@@ -1,3 +1,3 @@
 module.exports = {
-  phases: [{ name: 'cjs-phase', execute: () => {} }],
+  tools: [{ name: 'cjs-tool', execute: () => {} }],
 };

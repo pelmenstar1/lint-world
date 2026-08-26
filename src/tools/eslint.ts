@@ -5,17 +5,17 @@ import {
 } from '../internal/tool/cache.js';
 import { type MaybeArray } from '../internal/maybeArray.js';
 import { resolveToolTarget, type ToolTarget } from '../internal/tool/target.js';
-import { defineLintPhase } from '../phase.js';
+import { defineLintTool } from '../tool.js';
 import type { DefaultToolOptions } from '../internal/tool/types.js';
 
-export interface EslintPhaseOptions extends DefaultToolOptions {
+export interface EslintToolOptions extends DefaultToolOptions {
   target?: ToolTarget;
   cache?: CacheOption;
   cliOptions?: MaybeArray<string>;
 }
 
-export function eslint(options?: EslintPhaseOptions) {
-  return defineLintPhase({
+export function eslint(options?: EslintToolOptions) {
+  return defineLintTool({
     name: 'eslint',
     cli: {
       eslint: { default: options?.executeByDefault ?? true },
