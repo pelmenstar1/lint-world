@@ -12,7 +12,7 @@ function printStatus(
   action: string,
   toolName: string,
   format: (value: string) => string,
-): void {
+) {
   console.log(format(`> ${chalk.bold(toolName)} ${action}`));
 }
 

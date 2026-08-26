@@ -2,6 +2,9 @@ import { resolveCommand, type UnresolvedCommand } from '../command.js';
 import { execa } from 'execa';
 import type { LintToolExecution } from '../tool.js';
 
+/**
+ * Creates an {@link LintToolExecution | execution function} for a tool that is executed via `npm`.
+ */
 export function npmExec<Args>(
   command: UnresolvedCommand<Args>,
 ): LintToolExecution<Args> {
