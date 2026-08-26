@@ -1,6 +1,6 @@
 {
   "name": "lint-world",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Run every linter in your project with one command",
   "packageManager": "pnpm@11.24.0",
   "license": "MIT",
